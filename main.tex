@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper]{report}
+
+% --- Idioma y codificación ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+% --- Márgenes ---
+\usepackage[margin=2.5cm]{geometry}
+
+% --- Imágenes ---
+\usepackage{graphicx}
+\graphicspath{{figuras/}}   % busca las imágenes en la carpeta figuras/
+\usepackage{float}          % permite [H] = "pon la imagen exactamente aquí"
+
+% --- Código en monospace ---
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {ñ}{{\~n}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1
+           {Ú}{{\'U}}1 {Ñ}{{\~N}}1
+}
+
+% --- Títulos de capítulo: solo el título, sin "Capítulo N" encima ---
+\usepackage{titlesec}
+\titleformat{\chapter}{\normalfont\huge\bfseries}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+% --- Enlaces clicables en el índice ---
+\usepackage{hyperref}
+
+% --- Numerar e incluir en el índice hasta el nivel 4 ---
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\title{Aplicación Android}
+\author{Ainoa López Lizana \and Maya, escribe tus apellidos en el main}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+% --- Capítulos: uno por archivo ---
+\input{capitulos/01-introduccion}
+
+\end{document}
