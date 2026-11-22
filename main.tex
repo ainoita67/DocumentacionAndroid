@@ -33,9 +33,12 @@
 % --- Enlaces clicables en el índice ---
 \usepackage{hyperref}
 
+% saltos de parrafo
+\usepackage{parskip}
+
 % --- Numerar e incluir en el índice hasta el nivel 4 ---
 \setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{1}
 
 \title{Aplicación Android}
 \author{Ainoa López Lizana \and Maya, escribe tus apellidos en el main}
@@ -47,6 +50,8 @@
 \tableofcontents
 
 % --- Capítulos: uno por archivo ---
+\input{capitulos/00-ejemplo}
 \input{capitulos/01-introduccion}
+\input{capitulos/02-menu}
 
 \end{document}
