@@ -1,0 +1,56 @@
+\chapter{Piedra, papel o tijera}
+\label{chap:piedrapapeltijera}
+Este es el juego de piedra, papel o tijera de la aplicación.
+El jugador elige una jugada, la aplicación elige otra al azar y se muestra quién gana.
+Un marcador cuenta las victorias, las derrotas y los empates.
+
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+Las jugadas, el marcador y el resultado se muestran en fichas con borde petróleo, como las del menú.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{piedrapapeltijera}
+\end{figure}
+
+\section{Recursos visuales}
+Los iconos de las tres jugadas y el signo de interrogación inicial son \texttt{VectorDrawable} en la carpeta \texttt{drawable}.
+Se llaman \texttt{ic\_piedra}, \texttt{ic\_papel}, \texttt{ic\_tijera} e \texttt{ic\_pregunta}.
+Al ser vectores se ven nítidos a cualquier tamaño y usan los colores de la paleta de la aplicación.
+El interrogante solo ocupa el sitio de las dos jugadas hasta la primera partida.
+
+\section{Representación de las jugadas}
+Cada jugada es un número: $0$ es piedra, $1$ es papel y $2$ es tijera.
+Una lista con los tres iconos, en ese mismo orden, permite mostrar la jugada con su número.
+
+\begin{lstlisting}
+private val iconos = listOf(R.drawable.ic_piedra, R.drawable.ic_papel, R.drawable.ic_tijera)
+private val nombres = listOf("piedra", "papel", "tijera")
+\end{lstlisting}
+
+\section{Elegir al ganador}
+La aplicación elige su jugada con un número aleatorio entre $0$ y $2$.
+Después se compara con la del jugador.
+
+\begin{lstlisting}
+val app = (0..2).random()
+
+if (jugador == app) {
+    empates++
+} else if ((jugador == 0 && app == 2) || (jugador == 1 && app == 0) || (jugador == 2 && app == 1)) {
+    victorias++
+} else {
+    derrotas++
+}
+\end{lstlisting}
+
+Hay empate si las dos jugadas son iguales.
+El jugador gana si la piedra vence a la tijera, el papel a la piedra o la tijera al papel.
+En cualquier otro caso, gana la aplicación.
+
+\section{Resultado y marcador}
+Después de cada ronda se ponen los dos iconos con \texttt{setImageResource}.
+El texto del resultado dice qué jugada eligió la aplicación.
+El color del banner cambia según el resultado: verde si gana el jugador, naranja si pierde y mostaza si empata.
+
+El marcador son tres contadores que se actualizan al terminar cada ronda.
+El botón Reiniciar marcador los pone a cero y devuelve los dos iconos al interrogante.

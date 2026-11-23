@@ -1,0 +1,58 @@
+\chapter{Lista de recetas}
+\label{chap:recetas}
+Esta es la función de recetas de la aplicación.
+Muestra una lista de recetas y permite añadir una nueva, editar una existente y eliminarla.
+
+La lista y el almacenamiento de las recetas parten de lo visto en clase.
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{recetas}
+\end{figure}
+
+\section{Lista de recetas}
+La pantalla de la lista usa un \texttt{RecyclerView} con un adaptador que dibuja una tarjeta por cada receta.
+Al pulsar una tarjeta se abre el detalle de esa receta, y el botón de nueva receta abre el formulario vacío.
+Cuando se vuelve a la lista, se llama a \texttt{notifyDataSetChanged()} desde \texttt{onResume} para que se vean los cambios.
+
+\section{Edición de una receta}
+Cada receta tiene un botón Editar en su pantalla de detalle.
+Reutiliza el formulario de nueva receta en lugar de crear una pantalla aparte.
+
+El detalle envía la posición de la receta en el \texttt{Intent} y cierra su pantalla:
+
+\begin{lstlisting}
+findViewById<Button>(R.id.botonEditar).setOnClickListener {
+    val intent = Intent(this, NuevaRecetaActivity::class.java)
+    intent.putExtra(NUMERO_RECETA, idReceta)
+    startActivity(intent)
+    finish()
+}
+\end{lstlisting}
+
+\section{Crear o editar con el mismo formulario}
+El formulario lee la posición recibida.
+Si no recibe ninguna, el valor por defecto es $-1$ y se crea una receta nueva.
+Si recibe una posición de $0$ o más, se editan los datos de esa receta.
+
+\begin{lstlisting}
+idEdicion = intent.getIntExtra(RecetaActivity.NUMERO_RECETA, -1)
+
+if (idEdicion >= 0) {
+    rellenarFormulario(RepositorioSingleton.instance.listaRecetas.buscar(idEdicion))
+} else {
+    anadirFilaIngrediente()
+    anadirFilaPaso()
+}
+\end{lstlisting}
+
+La función \texttt{rellenarFormulario} cambia el título a Editar receta y el botón a Guardar cambios.
+También rellena los campos, selecciona la categoría y crea una fila por cada ingrediente y por cada paso de la receta.
+Un ingrediente sin cantidad se muestra como al gusto.
+
+\section{Guardar los cambios}
+Al guardar, el formulario construye una receta con los datos escritos.
+Si está en modo edición llama a \texttt{actualizar(idEdicion, receta)}, que sustituye la receta de esa posición.
+Si no, llama a \texttt{nueva(receta)}, que la añade al final.
+Después cierra la pantalla y la lista se actualiza al volver.
