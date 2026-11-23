@@ -1,0 +1,45 @@
+\chapter{Conversor de divisas}
+\label{chap:divisas}
+Esta es la función de conversor de divisas de la aplicación.
+Permite convertir un importe entre dólares, euros y yenes, y el resultado se recalcula mientras se escribe.
+
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+La pantalla tiene una cabecera verde y cuatro fichas: divisa de origen, divisa de destino, importe y total.
+El importe es un campo numérico que no permite escribir un signo negativo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{divisas}
+\end{figure}
+
+\section{Enumeración Divisa}
+Cada divisa se define una sola vez con su nombre y su tasa respecto al euro.
+
+\begin{lstlisting}
+enum class Divisa(val nombre: String, val tasaPorEuro: Double) {
+    DOLAR("Dólares", 1.08),
+    EURO("Euros", 1.0),
+    YEN("Yenes", 165.0)
+}
+\end{lstlisting}
+
+Añadir una divisa nueva es añadir una línea.
+Las tasas son fijas y de ejemplo, no se consultan a ningún servicio externo.
+
+\section{Conversión}
+Todas las conversiones pasan por el euro.
+Se divide el importe entre la tasa de origen y se multiplica por la tasa de destino.
+
+\begin{lstlisting}
+fun convertir(importe: Double, origen: Divisa, destino: Divisa) =
+    importe / origen.tasaPorEuro * destino.tasaPorEuro
+\end{lstlisting}
+
+Con una sola tasa por divisa se cubre cualquier pareja.
+
+\section{Funcionamiento de la pantalla}
+La divisa elegida en el origen se oculta en el destino, para evitar convertir una divisa en sí misma.
+Cada vez que cambia el importe se llama a \texttt{calcularTotal()}.
+Esta función cambia la coma por un punto y usa \texttt{toDoubleOrNull()}.
+Si el texto no es un número válido, el total queda vacío y la aplicación no falla.
+Si es válido, se muestra el total con dos decimales.
