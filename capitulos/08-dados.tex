@@ -1,0 +1,74 @@
+\chapter{Lanzador de dados}
+\label{chap:dados}
+Esta es la función de dados de la aplicación.
+Permite elegir el tipo de dado y cuántos se lanzan, entre 1 y 20, y muestra el resultado de cada uno y la suma.
+
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{dados}
+\end{figure}
+
+\section{Enumeración TipoDado}
+Cada tipo de dado se define una sola vez con su número de caras.
+
+\begin{lstlisting}
+enum class TipoDado(val caras: Int) {
+    D4(4),
+    D6(6),
+    D8(8),
+    D10(10),
+    D12(12),
+    D20(20),
+    D100(100);
+
+    override fun toString() = "d$caras"
+}
+\end{lstlisting}
+
+La función \texttt{toString()} está sobrescrita para que cada dado se muestre como d4, d6, etc.
+El desplegable usa ese texto directamente, así que se le puede pasar la lista de valores del enum sin convertirla antes.
+Empieza seleccionado el dado de 6 caras.
+
+Añadir un dado nuevo es añadir una línea.
+
+\section{Cambiar la cantidad de dados}
+Los botones de más y menos llaman a la función \texttt{cambiarCantidad}, que recibe un $+1$ o un $-1$.
+
+\begin{lstlisting}
+private fun cambiarCantidad(cambio: Int) {
+    cantidad = (cantidad + cambio).coerceIn(minDados, maxDados)
+    textoCantidad.text = cantidad.toString()
+}
+\end{lstlisting}
+
+Con \texttt{coerceIn} la cantidad nunca baja del mínimo ni pasa del máximo, así que no hacen falta más comprobaciones.
+
+\section{Lanzar los dados}
+La función \texttt{lanzar} mira qué dado está elegido y genera un número aleatorio por cada dado.
+
+\begin{lstlisting}
+val tipo = TipoDado.entries[spinnerTipo.selectedItemPosition]
+val resultados = List(cantidad) { Random.nextInt(1, tipo.caras + 1) }
+\end{lstlisting}
+
+Se suma 1 a las caras porque \texttt{Random.nextInt} no incluye el último número.
+
+\subsection{Dibujar los resultados}
+Primero se borran los dados de la tirada anterior con \texttt{removeAllViews()}.
+Después se crea un cuadrado por cada resultado y cada 5 dados se crea una nueva fila.
+
+\begin{lstlisting}
+if (i % 5 == 0) {
+    fila = LinearLayout(this)
+    fila.orientation = LinearLayout.HORIZONTAL
+    layoutDados.addView(fila)
+}
+\end{lstlisting}
+
+Los cuadrados son \texttt{TextView} creados desde el código, porque no se sabe cuántos hacen falta hasta que se lanza.
+Por eso el color, la letra y el tamaño también se ponen ahí y no en el XML.
+Las medidas se multiplican por la densidad de la pantalla para pasarlas de dp a píxeles.
+
+Al final se muestra la suma de todos los dados.

@@ -1,0 +1,20 @@
+\chapter{Menú de juegos}
+Este es el menú desde el que se accede a los juegos de la aplicación.
+Tiene tres tarjetas: piedra, papel o tijera, los dados y luces fuera.
+
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{menujuegos}
+\end{figure}
+
+Cada opción es una \texttt{MaterialCardView} que, al pulsarla, abre la pantalla de su juego con un \texttt{Intent}.
+
+\begin{lstlisting}
+findViewById<MaterialCardView>(R.id.cardLuces).setOnClickListener {
+    startActivity(Intent(this, LucesActivity::class.java))
+}
+\end{lstlisting}
+
+Las otras dos tarjetas funcionan igual, cambiando la pantalla que se abre.

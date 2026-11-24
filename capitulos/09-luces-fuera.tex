@@ -1,0 +1,60 @@
+\chapter{Luces fuera}
+Este es el juego de luces fuera de la aplicación.
+Es un tablero de 5 por 5 y el objetivo es apagar todas las casillas.
+Al pulsar una, cambian ella y las que tiene arriba, abajo, a la izquierda y a la derecha.
+
+Se sigue la misma paleta de colores que en el resto de la aplicación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{luces}
+\end{figure}
+
+\section{Representación del tablero}
+El estado del juego se guarda en una matriz de números, donde $0$ es apagada y $1$ es encendida.
+
+\begin{lstlisting}
+private val luces = Array(tamano) { IntArray(tamano) }
+\end{lstlisting}
+
+Otra matriz guarda los \texttt{TextView} en el mismo orden, así que la misma fila y columna sirven para las dos.
+
+\section{Nueva partida}
+La función \texttt{nuevaPartida} apaga todo el tablero y después simula 5 pulsaciones al azar.
+
+\begin{lstlisting}
+for (i in 1..5) {
+    cambiarCruz(Random.nextInt(tamano), Random.nextInt(tamano))
+}
+\end{lstlisting}
+
+Así el tablero siempre tiene solución, porque basta con repetir esas pulsaciones.
+Si se pusieran las luces al azar, muchas veces no se podría resolver.
+
+\section{Cambiar las luces}
+La función \texttt{cambiarCruz} llama a \texttt{cambiar} para la casilla pulsada y las cuatro de alrededor.
+
+\begin{lstlisting}
+private fun cambiar(fila: Int, columna: Int) {
+    if (fila in 0 until tamano && columna in 0 until tamano) {
+        if (luces[fila][columna] == 0) {
+            luces[fila][columna] = 1
+        } else {
+            luces[fila][columna] = 0
+        }
+    }
+}
+\end{lstlisting}
+
+Antes de cambiar una casilla, \texttt{cambiar} comprueba que está dentro del tablero.
+De esta forma los bordes y las esquinas no dan error.
+
+\section{Pulsar una casilla y ganar}
+Al tocar una casilla se llama a \texttt{pulsar}, que cambia las luces y actualiza la pantalla.
+Después comprueba si se ha ganado con \texttt{todasApagadas}.
+Esta función recorre la matriz y devuelve \texttt{false} en cuanto encuentra una luz encendida.
+Si no hay ninguna, se muestra un \texttt{Toast} avisando de que se ha ganado.
+
+\section{Actualizar la pantalla}
+La función \texttt{actualizarPantalla} copia la matriz a las casillas.
+Pone el número y los colores de cada una: mostaza si está encendida y verde si está apagada.
