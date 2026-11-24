@@ -6,15 +6,157 @@ Muestra una lista de recetas y permite añadir una nueva, editar una existente y
 La lista y el almacenamiento de las recetas parten de lo visto en clase.
 Se sigue la misma paleta de colores que en el resto de la aplicación.
 
+\section{Lista de recetas}
+La pantalla de la lista usa un \texttt{RecyclerView} con un adaptador que dibuja una tarjeta por cada receta.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.4\textwidth]{recetas}
 \end{figure}
 
-\section{Lista de recetas}
-La pantalla de la lista usa un \texttt{RecyclerView} con un adaptador que dibuja una tarjeta por cada receta.
 Al pulsar una tarjeta se abre el detalle de esa receta, y el botón de nueva receta abre el formulario vacío.
 Cuando se vuelve a la lista, se llama a \texttt{notifyDataSetChanged()} desde \texttt{onResume} para que se vean los cambios.
+
+\section{Detalle de una receta}
+El detalle de la receta muestra el nombre, la categoría, las raciones, el tiempo de preparación y de cocción, la valoración, los ingredientes y los pasos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{detallereceta}
+\end{figure}
+
+\subsection{Ingredientes de la receta}
+Los ingredientes se muestran en un \texttt{RecyclerView} con un adaptador que dibuja una fila por cada elemento.
+
+\begin{lstlisting}
+// --- Ingredientes: una fila por cada ingrediente ---
+val listaIngredientes = findViewById<LinearLayout>(R.id.listaIngredientes)
+for (ingrediente in receta.ingredientes) {
+    // Creamos una fila nueva a partir de fila_ingrediente.xml
+    val fila = layoutInflater.inflate(R.layout.fila_ingrediente, listaIngredientes, false)
+    fila.findViewById<TextView>(R.id.textNombreIngrediente).text = ingrediente.nombre
+    // cantidadTexto() junta número y unidad, por ejemplo "200 g" o "Al gusto"
+    fila.findViewById<TextView>(R.id.textCantidadIngrediente).text = ingrediente.cantidadTexto()
+    // La añadimos al contenedor para que se vea en pantalla
+    listaIngredientes.addView(fila)
+}
+\end{lstlisting}
+
+\subsection{Pasos de la receta}
+Los pasos de la receta se muestran de uno en uno en otro \texttt{RecyclerView}, con el número de paso y la descripción. Se puede avanzar y retroceder con los botones de la parte inferior.
+
+Para mostrar el paso actual, se comprueba si hay pasos y se actualiza el texto y la visibilidad de los botones según corresponda.
+
+\begin{lstlisting}
+fun mostrarPaso() {
+    if (pasos.isEmpty()) {
+        textNumeroPaso.text = "Sin instrucciones"
+        textPaso.text = ""
+        botonAnterior.visibility = View.INVISIBLE
+        botonSiguiente.visibility = View.INVISIBLE
+        return
+    }
+    textNumeroPaso.text = "Paso ${pasoActual + 1} de ${pasos.size}"
+    textPaso.text = pasos[pasoActual]
+    // En el primer paso no hay "anterior"; en el último no hay "siguiente"
+    botonAnterior.visibility = if (pasoActual > 0) View.VISIBLE else View.INVISIBLE
+    botonSiguiente.visibility = if (pasoActual < pasos.size - 1) View.VISIBLE else View.INVISIBLE
+}
+\end{lstlisting}
+
+Los botones se encargan de cambiar el índice del paso actual y llamar a \texttt{mostrarPaso()} para actualizar la pantalla.
+
+\begin{lstlisting}
+botonAnterior.setOnClickListener {
+    if (pasoActual > 0) {
+        pasoActual--
+        mostrarPaso()
+    }
+}
+
+botonSiguiente.setOnClickListener {
+    if (pasoActual < pasos.size - 1) {
+        pasoActual++
+        mostrarPaso()
+    }
+        }
+\end{lstlisting}
+
+\subsection{Eliminar}
+El botón de eliminar borra la receta y cierra la pantalla.
+Pide una doble confirmación con un diálogo de alerta para evitar borrados accidentales y utiliza el metodo \texttt{borrar(posicion)} del repositorio para eliminar la receta de la lista.
+
+\begin{lstlisting}
+findViewById<Button>(R.id.botonEliminar).setOnClickListener {
+    AlertDialog.Builder(this)
+        .setTitle("Eliminar receta")
+        .setMessage("¿Seguro que quieres eliminar \"${receta.titulo}\"? No se puede deshacer.")
+        .setPositiveButton("Eliminar") { _, _ ->
+            lista.borrar(idReceta)
+            Toast.makeText(this, "Receta eliminada", Toast.LENGTH_SHORT).show()
+            finish()  // vuelve a la lista
+        }
+        .setNegativeButton("Cancelar", null)  // null = solo cierra el diálogo
+        .show()
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{eliminarreceta}
+\end{figure}
+
+\section{Nueva receta}
+El formulario permite crear una receta con su título, categoría, tiempos de preparación y cocción, raciones, valoración, ingredientes y pasos.
+La categoría se elige en un \texttt{Spinner} que se rellena con los valores del enum \texttt{Categoria}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{nuevareceta}
+\end{figure}
+
+\subsection{Filas de ingredientes y pasos}
+Como cada receta puede tener un número distinto de ingredientes y pasos, las filas se añaden dinámicamente a un \texttt{LinearLayout}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{masingredientes}
+\end{figure}
+
+Al crear una receta, el formulario empieza con una fila vacía de cada tipo.
+Cada fila incluye un botón para quitarla.
+
+\begin{lstlisting}
+private fun anadirFilaIngrediente(): View {
+    val fila = layoutInflater.inflate(
+        R.layout.fila_nuevo_ingrediente, contenedorIngredientes, false)
+    // El botón quita la fila
+    fila.findViewById<Button>(R.id.botonQuitarIngrediente).setOnClickListener {
+        contenedorIngredientes.removeView(fila)
+    }
+    contenedorIngredientes.addView(fila)
+    return fila
+}
+\end{lstlisting}
+
+Los pasos funcionan igual, con la función \texttt{anadirFilaPaso()}.
+
+\subsection{Validación de los datos}
+Antes de guardar se comprueba que el título no esté vacío, que los tiempos sean números enteros y que haya al menos una ración.
+Si un campo no es válido, se muestra el error en él y no se guarda la receta.
+Para los números se usa \texttt{toIntOrNull()}, que devuelve \texttt{null} si el texto no es un número entero válido.
+
+\begin{lstlisting}
+if (raciones == null || raciones < 1) {
+    editRaciones.error = "Tiene que ser 1 o más"
+    editRaciones.requestFocus()
+    return
+}
+\end{lstlisting}
+
+Después se recorren las filas y se ignoran los ingredientes sin nombre y los pasos vacíos.
+La cantidad admite coma o punto decimal y, si no se indica, el ingrediente se guarda sin cantidad ni unidad, es decir, «al gusto».
+También se exige al menos un ingrediente y un paso; si faltan, se avisa con un \texttt{Toast}.
 
 \section{Edición de una receta}
 Cada receta tiene un botón Editar en su pantalla de detalle.
@@ -31,7 +173,7 @@ findViewById<Button>(R.id.botonEditar).setOnClickListener {
 }
 \end{lstlisting}
 
-\section{Crear o editar con el mismo formulario}
+\subsection{Crear o editar con el mismo formulario}
 El formulario lee la posición recibida.
 Si no recibe ninguna, el valor por defecto es $-1$ y se crea una receta nueva.
 Si recibe una posición de $0$ o más, se editan los datos de esa receta.
