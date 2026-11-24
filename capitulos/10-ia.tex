@@ -1,0 +1,72 @@
+\chapter{Anexo: uso de IA}
+Durante el desarrollo de la aplicación hemos utilizado inteligencia artificial para resolver dudas, entender partes del código, programar algunas funcionalidades y mejorar el aspecto de las pantallas.
+
+A continuación se recogen los prompts utilizados para la aplicación, ordenados por fecha y tal y como se escribieron.
+
+\section{13 de noviembre de 2026}
+\begin{enumerate}
+  \item como pongo word wrap en android studio
+  \item holi vamos a editar el receta activiti. no se como hacerlo igual toca hacer cards como he hecho en el listado pero quiero empezar por que la lista de pasos de una receta no sea texto plano, me gustaria que saieran cada una en un bloque de color, con el numero del paso al que peertenecen y una felcha que dejara avanzar en los parsos de la receta acia alante y hacia atras, tiene que ser toodo en el apartado instrucciones del receta activiti. explicame todo para que lo entienda
+  \item usas View.INVISIBLE, eso lo dfinimos nosotros?
+  \item como hago para que un linear layout tenga las esquinas redondeadas
+  \item vale ahora necesito ayuda para escribir la lista de ingredientes, toma los que hay de egemplo y pon en la cantidad tambien la unidad de medida
+  \item perfe muy bonito. vamos a cambiar un poco la estructura de datos para hacerlo mas profesional pero antes de tocar nada dame tu opinion y yo te digo si lo hacemos o no. Es mejor guardar la unidad de medida en otra variable?, estaria bien tenerlos en un array multidireccional directamente o algo tipo de parejas o no se como se llama en vez de tener 2 mutable list separadas? cual seria la mejor estructura para tener los ingredientes la clantiddad y la unidad de medida?
+  \item okey hazlo todo conl a clase ingrediente cambia lo que tengas uq ecambiar y dejalo funcional
+  \item vamos a añadir un atributo a receta que sea raciones y que salga tanto en la informacion de la receta como en la lista de recetas
+  \item vamos a unificar la estetica de la aplicacion, he elegido esta paleta de colores que es un poco retro, \#F6E2B3, \#E7A84E, \#D96C2C, \#3E8E7E, \#274C56, son asi retro asi que dale un aspecto un poco retro, cambia el aspecto de todas las pantallas que existen ahora pero no uses atributos muy complejos, hazme un listado de los cambios.
+  \item un no me acaba de gusta, vamos a cambiar cosas. como yo no usaba un themes.xml no quiero que lo usemos ahora tampoco. pono todo manualmente en las paginas.
+  Cambia la fente, si hay que descargarla explicame, igual me renta alguna estilo terminal. me parece bien que la am solo tenga modo claro, eso mantnlo. no se si me gusta que pongas los bordes asi en todo dame mas ideas de diseño en cuanto a los bordes. la calculadora no esta mal a ver como queda con los cambios que ya te he dicho. el \textquotedbl ingredientes en la receta no tiene suficiente contraste
+  \item me gusta un huevo de momento noo cambiamos nada, ahora me gustaria cambiar los iconos a algunos mas acordes a la estetica actual. donde puedo buscarlos que busco, tanto para las clases de recetas como para los apartados del menu
+  \item al final no cambio la imagenes porque no me gustan las otras opciones. haxme directamente la opcion de añadir nuevas recetas. tiene que ser una interfazz comoda y accesible y no mucho mas compleja de lo que ya he escrito para que no tenga demasiado contraste con lo que ya hay
+  \item como has hecho para que lo de guardar receta se vea en todo momento por encima del scroll
+  \item voy a seguir haciendote preguntas sobre el codigo que es esto \verb|override fun onCreate(savedInstanceState: Bundle?) {|
+  \item vale pero el savedinstancestate cuando se una en esta aplicacion
+  \item como se ha añadido demasiada complegidad te voy a indicar apartados para eliminar. lo de que cuando se abre el teclado se ajustan cosas quitalo, lo de que el spinner de categoria se rellene con un adaptador quitalo tambien y quita tambien el adaptador
+  \item no quiero que las categorias se guarden en un strings porque para eso he creado el enum. que se hagan leyendo la lista de enums y sustituyendo \verb|_| por espacio
+  \item no pruebes nada en el emulador
+  \item vale una pregunta cual es la manera mas comun en la que alguien hace un formulario en android con un desplegable con valores predeterminados. no lo hagas solo muestramelo aqui
+  \item vale vamos a hacerlo como me has dicho con el arrayadapter de la manera mas sencilla posible. simplifica los comentarios pero que se entienda dtodo. y añade un campo texto en la enum para poder hacerlo directamente con eso para no hacer transformaciones
+  \item que es esto \verb|Toast.LENGTH_LONG|
+\end{enumerate}
+
+\section{14 de noviembre de 2026}
+\begin{enumerate}[resume]
+  \item okey ahora la funcionalidad de eliminar recetas
+  \item que bieeen vamos a cambier un poco los estilos y ya
+  \item vale te digo, el boton de eliminar cambialo a otro sitio no donde el titulo de la receta, crea tambien un boton de editar receta pero no le des funcionalidad.
+  dale tambien un poco mas de margen en la parte superior de la receta porque se junta la imagen con el titulo.
+  por ultimo queria preguntarte que opciones tenemos para mostrar los mensages como receta guardada correctamente en plan que aparece ahi el logo de android y no me gusta
+  \item nono vamos a ponerle logo a la app para que salga tambien en los mensajes y en todos lados. he puesto el png del logo en drawables
+  \item vale ya tengouna imagenque funciona mejor con la paleta de colores como hago paso por paso para ponerla yo
+  \item el logo perfecto pero no se en que momento han dejado de poder pasarse para alante y atras los pasos de las recets
+\end{enumerate}
+
+\section{20 de noviembre de 2026}
+\begin{enumerate}[resume]
+  \item hola, para esta aplicacion que esta funcional quiero hacer una nueva pantalla que sera esto Juego de lanzar un dado, elijo el número de dados a lanzar y de que tipo. Me dirá el resultado de cada dado así como la suma. (1
+  \item no se lo que estoy haciendo pero estaba quitando la clase dado para dejarlo solo con tipo dado en un enum y el lanzar que se haga en el activiti y ya
+  \item porque son lateinit
+\begin{lstlisting}
+private lateinit var textoCantidad: TextView
+private lateinit var spinnerTipo: Spinner
+private lateinit var rejillaDados: GridLayout
+private lateinit var textoSuma: TextView
+\end{lstlisting}
+  \item lo estoy cambiando para que tenga un linear layout en vez de un grid y sin usar la plantilla esa con las esquinas redondeadas solo cuadrados
+  \item porque en lanzar hace falta lo del proceso todo el rato
+  \item perdon perdo lo del contextoç
+  \item holii vamos a hacer el juego ligths out en el que hay una cuadricula 5x5. al empezar la parrtida unos cuadrados estan en 0 y otros en 1. cuando presionas un cuadrado este cabia al estado contrario pero sus 4 filas abyacentes tambien lo hacen. se gana cuando todas las luces estan en 0. ya he hecho el layout activity\_luces haz el activity encendiendo y apagando esas luces. yo creo que lo vamos a hacer con una matriz que guarde los resultados y luego los actualice en el layout porque los textview se identifican por el nombre de fiila y columna l
+  \item como se hace esto en kt
+  \item {[}Solo código pegado, continuación del anterior{]}
+\begin{lstlisting}
+for (1 until 15)
+{
+    { cambiarCruz(Random.nextInt(tamano), Random.nextInt(tamano)) }
+}
+\end{lstlisting}
+\end{enumerate}
+
+\section{24 de noviembre de 2026}
+\begin{enumerate}[resume]
+  \item hazme un documetno con todos los prompts que te he puesto en esta seccion, en este chat, en el chat de pasos de receta en bloques... y en el chat de pantalla de lanzador de dados
+\end{enumerate}
